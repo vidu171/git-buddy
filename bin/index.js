@@ -43,7 +43,6 @@ function getPresentHead(keyname){
 function _headfetcher(keyname){
     var path = features.repo[""+keyname][1]+"/.git"
     var branch = (fs.readFileSync(path+"/HEAD")).toString().split('/')[2].trim();
-   
     const options = {
     uri: features.repo[keyname][0]+"/commits/"+branch,
     transform: function (body) {
@@ -53,19 +52,26 @@ function _headfetcher(keyname){
 
   rp(options)
   .then(($) => {
-     var heads = [];
-    $('clipboard-copy').each(function(i, elem) {
-        heads[i] = $(this).attr('value')+'\n';
-        heads[i].replace(",",'');
-      });   
+	var heads = [];
+	$('clipboard-copy').each(function(i, elem) {
+      heads[i] = $(this).attr('value');
+      heads[i] = heads[i].replace(",",'');
+    });   
+	
+	$('.commit-title').each(function(i, elem) {
+		heads[i] += " | "+  $(elem).text();
+		heads[i] = heads[i].replace('…','');
+		heads[i] = heads[i].replace(/\s+/g,' ');
+		heads[i] = heads[i].substring(1,heads[i].length - 1)
+	})	  
 
-      /**
+	  /**
        * if reference of top == head 
        * var message = ("NO PULL REQUIRED".yellow)+"\n\n"+heads.toString();
        * else 
        * var message = ("PULL REQUIRED".yellow)+"\n\n"+heads.toString();
     */
-      console.log(message);
+      console.log(heads);
   })
   .catch((err) => {
     console.log(err);
