@@ -65,13 +65,16 @@ function _headfetcher(keyname){
 		heads[i] = heads[i].substring(1,heads[i].length - 1)
 	})	  
 
-	  /**
-       * if reference of top == head 
-       * var message = ("NO PULL REQUIRED".yellow)+"\n\n"+heads.toString();
-       * else 
-       * var message = ("PULL REQUIRED".yellow)+"\n\n"+heads.toString();
-    */
-      console.log(heads);
+	var msg = ""
+	var ref = getPresentHead(keyname).split(":")[1]
+	if(ref = heads[0]){
+		message = ("NO PULL REQUIRED".yellow)+"\n\n"
+	}else{
+		message = ("PULL REQUIRED".yellow)+"\n\n"
+	}
+	
+	console.log(message)
+    console.log(heads)
   })
   .catch((err) => {
     console.log(err);
