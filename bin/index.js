@@ -47,7 +47,7 @@ function _headfetcher(keyname){
         branch =  (fs.readFileSync(path+"/HEAD")).toString().split('/')[2].trim();
     }
     catch(err){
-        message = ("path "+ path.red + " doesn't exist".red)+"\n"
+        message = ("path ".red+ path.red + " doesn't exist".red)+"\n"
         console.log(message);
         return;
     }
@@ -110,11 +110,17 @@ program
  * Logic of all the program here
  */
 
-if(program.list)
-    console.log (features.getListOfRepoAvailable)
+if(program.list){
+    var feat = ' ' + features.getListOfRepoAvailable;
+    feat = feat.replace(/,/g, '\n ');
+    console.log (feat.blue)
+
+}
+    
 
 else if(program.head){
-    console.log(getPresentHead(program.head))
+    var present_head = " " + getPresentHead(program.head);
+    console.log(present_head.green);
 }
 
 else if(program.fetch){
