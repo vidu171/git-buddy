@@ -15,8 +15,6 @@ const cheerio = require('cheerio');
 
 
 //Returns the head of the selected repo
-
-
 function getPresentHead(keyname){
     //default path
     var path = features.repo[""+keyname][1]+"/.git"
@@ -40,9 +38,25 @@ function getPresentHead(keyname){
 
 // }
 
+
+function _fetchAll(){
+    for (key in features.repo){
+        _headfetcher(key);
+    }
+    
+}
+
 function _headfetcher(keyname){
     var path = features.repo[""+keyname][1]+"/.git"
-    var branch = (fs.readFileSync(path+"/HEAD")).toString().split('/')[2].trim();
+    var branch; 
+    try{
+        branch =  (fs.readFileSync(path+"/HEAD")).toString().split('/')[2].trim();
+    }
+    catch(err){
+        message = ("path ".red+ path.red + " doesn't exist".red)+"\n"
+        console.log(message);
+        return;
+    }
     const options = {
     uri: features.repo[keyname][0]+"/commits/"+branch,
     transform: function (body) {
@@ -68,7 +82,7 @@ function _headfetcher(keyname){
 	var msg = ""
 	var ref = getPresentHead(keyname).split(":")[1]
 	if(ref = heads[0]){
-		message = ("NO PULL REQUIRED".yellow)+"\n\n"
+		message = ("NO PULL REQUIRED FOR REPO : "+ keyname.yellow)+"\n\n"
 	}else{
 		message = ("PULL REQUIRED".yellow)+"\n\n"
 	}
@@ -95,23 +109,30 @@ program
     .option('-l, --list', 'The available repo in repo.json are')
     .option('-h, --head <keyname>', 'Get the head of the selected repo')
     .option('-f, --fetch <keyname>', 'Fetches the repo head currently works for public repo only')
-    .option('-a, --author', 'Show the author')
+    .option('-a, --all', 'Fetech the repo head for all everything in the json array')
     .parse(process.argv);
 
 /**
  * Logic of all the program here
  */
 
-if(program.list)
-    console.log (features.getListOfRepoAvailable)
+if(program.list){
+    var feat = ' ' + features.getListOfRepoAvailable;
+    feat = feat.replace(/,/g, '\n ');
+    console.log (feat.blue)
+
+}
+    
 
 else if(program.head){
-    console.log(getPresentHead(program.head))
+    var present_head = " " + getPresentHead(program.head);
+    console.log(present_head.green);
 }
 
 else if(program.fetch){
     _headfetcher(program.fetch);
 }
-else if(program.author){
-    console.log("aesher9o1".yellow);
+else if(program.all){
+    _fetchAll();
+
 }
