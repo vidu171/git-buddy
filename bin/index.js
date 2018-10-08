@@ -15,8 +15,6 @@ const cheerio = require('cheerio');
 
 
 //Returns the head of the selected repo
-
-
 function getPresentHead(keyname){
     //default path
     var path = features.repo[""+keyname][1]+"/.git"
@@ -39,6 +37,14 @@ function getPresentHead(keyname){
 //     )
 
 // }
+
+
+function _fetchAll(){
+    for (key in features.repo){
+        _headfetcher(key);
+    }
+    
+}
 
 function _headfetcher(keyname){
     var path = features.repo[""+keyname][1]+"/.git"
@@ -76,7 +82,7 @@ function _headfetcher(keyname){
 	var msg = ""
 	var ref = getPresentHead(keyname).split(":")[1]
 	if(ref = heads[0]){
-		message = ("NO PULL REQUIRED".yellow)+"\n\n"
+		message = ("NO PULL REQUIRED FOR REPO : "+ keyname.yellow)+"\n\n"
 	}else{
 		message = ("PULL REQUIRED".yellow)+"\n\n"
 	}
@@ -103,7 +109,7 @@ program
     .option('-l, --list', 'The available repo in repo.json are')
     .option('-h, --head <keyname>', 'Get the head of the selected repo')
     .option('-f, --fetch <keyname>', 'Fetches the repo head currently works for public repo only')
-    .option('-a, --author', 'Show the author')
+    .option('-a, --all', 'Fetech the repo head for all everything in the json array')
     .parse(process.argv);
 
 /**
@@ -126,6 +132,7 @@ else if(program.head){
 else if(program.fetch){
     _headfetcher(program.fetch);
 }
-else if(program.author){
-    console.log("aesher9o1".yellow);
+else if(program.all){
+    _fetchAll();
+
 }
