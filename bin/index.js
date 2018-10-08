@@ -42,7 +42,15 @@ function getPresentHead(keyname){
 
 function _headfetcher(keyname){
     var path = features.repo[""+keyname][1]+"/.git"
-    var branch = (fs.readFileSync(path+"/HEAD")).toString().split('/')[2].trim();
+    var branch; 
+    try{
+        branch =  (fs.readFileSync(path+"/HEAD")).toString().split('/')[2].trim();
+    }
+    catch(err){
+        message = ("path "+ path.red + " doesn't exist".red)+"\n"
+        console.log(message);
+        return;
+    }
     const options = {
     uri: features.repo[keyname][0]+"/commits/"+branch,
     transform: function (body) {
