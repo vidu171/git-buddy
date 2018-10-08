@@ -120,7 +120,6 @@ if(program.list){
     var feat = ' ' + features.getListOfRepoAvailable;
     feat = feat.replace(/,/g, '\n ');
     console.log (feat.blue)
-
 }
     
 
