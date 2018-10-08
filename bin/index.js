@@ -48,7 +48,15 @@ function _fetchAll(){
 
 function _headfetcher(keyname){
     var path = features.repo[""+keyname][1]+"/.git"
-    var branch = (fs.readFileSync(path+"/HEAD")).toString().split('/')[2].trim();
+    var branch; 
+    try{
+        branch =  (fs.readFileSync(path+"/HEAD")).toString().split('/')[2].trim();
+    }
+    catch(err){
+        message = ("path ".red+ path.red + " doesn't exist".red)+"\n"
+        console.log(message);
+        return;
+    }
     const options = {
     uri: features.repo[keyname][0]+"/commits/"+branch,
     transform: function (body) {
@@ -108,11 +116,17 @@ program
  * Logic of all the program here
  */
 
-if(program.list)
-    console.log (features.getListOfRepoAvailable)
+if(program.list){
+    var feat = ' ' + features.getListOfRepoAvailable;
+    feat = feat.replace(/,/g, '\n ');
+    console.log (feat.blue)
+
+}
+    
 
 else if(program.head){
-    console.log(getPresentHead(program.head))
+    var present_head = " " + getPresentHead(program.head);
+    console.log(present_head.green);
 }
 
 else if(program.fetch){
